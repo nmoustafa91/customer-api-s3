@@ -1,0 +1,57 @@
+cloud:
+  aws:
+    credentials:
+      accessKey: 00b809c40844285629b8
+      secretKey: Dga4uhMYwYcIqf9hfN5XANw+8pipSSz5S83H9SrL
+    region:
+      static: de
+    s3:
+      endpoint: https://s3-eu-central-1.ionoscloud.com
+customers:
+  s3-storage:
+    batch-size: 100
+    hourly-delta-frequency: 2
+    cron:
+      upload: "0 0 */2 * * ?"
+  time-zone: Europe/Berlin
+info:
+  name: customers API
+logging:
+  level:
+    com:
+      customers: DEBUG
+    root: INFO
+server:
+  port: 8081
+  shutdown: graceful
+spring:
+  application:
+    name: customers-api
+  datasource:
+    password: mysecretpassword
+    url: jdbc:postgresql://localhost:9007/customerdb
+    username: mysecretuser
+  jackson:
+    deserialization:
+      read_date_timestamps_as_nanoseconds: false
+    time-zone: ${customers.time-zone}
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  sql:
+    init:
+      mode: always
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui-custom.html

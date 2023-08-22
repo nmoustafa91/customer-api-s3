@@ -1,0 +1,618 @@
+openapi: 3.0.0
+info:
+  description: "Customers API offers CRUD operations on managing customers with their assigned tasks."
+  version: "0.2.0"
+  title: "Customers API"
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+
+  /customers:
+    get:
+      tags:
+        - "Customers"
+      summary: "Get filtered customers list"
+      description: "Get filtered customers list"
+      operationId: getCustomers
+      parameters:
+        - $ref: '#/components/parameters/CustomerFirstNameQueryParam'
+        - $ref: '#/components/parameters/CustomerLastNameQueryParam'
+        - $ref: '#/components/parameters/CustomerIdsQueryParam'
+        - $ref: '#/components/parameters/CustomerCityQueryParam'
+        - $ref: '#/components/parameters/CompanyNameQueryParam'
+        - $ref: '#/components/parameters/ProductNumberQueryParam'
+        - $ref: '#/components/parameters/CustomerSearchQueryParam'
+        - $ref: '#/components/parameters/PageNumberQueryParam'
+        - $ref: '#/components/parameters/PageSizeQueryParam'
+        - $ref: '#/components/parameters/SortQueryParam'
+      responses:
+        "200":
+          $ref: '#/components/responses/ListCustomersResponse'
+    post:
+      tags:
+        - "Customers"
+      summary: "Create a new customer"
+      description: "Create a new customer"
+      operationId: createCustomer
+      requestBody:
+        $ref: "#/components/requestBodies/CreateCustomerBody"
+      responses:
+        "201":
+          $ref: '#/components/responses/CreateCustomerResponse'
+        "400":
+          description: "Invalid data supplied"
+  /customers/all-customers:
+    get:
+      tags:
+        - "Customers"
+      summary: "Get all customers"
+      description: "Get all customers"
+      operationId: getAllCustomers
+      parameters:
+        - $ref: '#/components/parameters/PageNumberQueryParam'
+        - $ref: '#/components/parameters/PageSizeQueryParam'
+        - $ref: '#/components/parameters/SortQueryParam'
+      responses:
+        "200":
+          $ref: '#/components/responses/ListCustomersResponse'
+
+  /customers/{customerId}:
+    parameters:
+      - $ref: "#/components/parameters/CustomerIdPathParam"
+    get:
+      tags:
+        - "Customers"
+      summary: "Get customer"
+      description: "Get existing customer"
+      operationId: getCustomer
+      responses:
+        "200":
+          $ref: '#/components/responses/GetCustomerResponse'
+        "404":
+          description: "Customer not found"
+    put:
+      tags:
+        - "Customers"
+      summary: "Update a customer"
+      description: "Update existing customer"
+      operationId: updateCustomer
+      parameters:
+        - in: header
+          name: If-Match
+          required: true
+          description: "ETag header value from getCustomer  call"
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateCustomerBody"
+      responses:
+        "200":
+          $ref: '#/components/responses/UpdateCustomerResponse'
+        "400":
+          description: "Invalid data supplied"
+        "404":
+          description: "Customer not found"
+    delete:
+      tags:
+        - "Customers"
+      summary: "Delete customer"
+      description: "Delete existing customer"
+      operationId: deleteCustomer
+      responses:
+        "204":
+          description: "Customer successfully deleted"
+        "404":
+          description: "Customer not found"
+
+  /customers/{customerId}/tasks:
+    parameters:
+      - $ref: "#/components/parameters/CustomerIdPathParam"
+    get:
+      tags:
+        - "Tasks"
+      summary: "Get tasks list by customer"
+      description: "Get tasks list by customer"
+      operationId: getTasks
+      parameters:
+        - $ref: '#/components/parameters/PageNumberQueryParam'
+        - $ref: '#/components/parameters/PageSizeQueryParam'
+        - $ref: '#/components/parameters/SortQueryParam'
+      responses:
+        "200":
+          $ref: '#/components/responses/ListTasksResponse'
+        "404":
+          description: "Customer not found"
+    post:
+      tags:
+        - "Tasks"
+      summary: "Create tasks for a customer"
+      description: "Create tasks for a customer"
+      operationId: createTasks
+      requestBody:
+        $ref: "#/components/requestBodies/CreateTasksBody"
+      responses:
+        "201":
+          $ref: '#/components/responses/TasksCreationResponse'
+        "400":
+          description: "Invalid data supplied"
+        "404":
+          description: "Customer not found"
+    delete:
+      tags:
+        - "Tasks"
+      summary: "Delete customer tasks"
+      description: "Delete existing customer tasks"
+      operationId: deleteTasks
+      responses:
+        "204":
+          description: "Tasks successfully deleted"
+        "404":
+          description: "Customer not found"
+  /tasks/{taskId}:
+    parameters:
+      - $ref: "#/components/parameters/TaskIdPathParam"
+    get:
+      tags:
+        - "Tasks"
+      summary: "Get a task"
+      description: "Get existing task"
+      operationId: getTask
+      responses:
+        "200":
+          $ref: '#/components/responses/GetTaskResponse'
+        "404":
+          description: "task not found"
+    put:
+      tags:
+        - "Tasks"
+      summary: "Update a task"
+      description: "Update existing task"
+      operationId: updateTask
+      parameters:
+        - in: header
+          name: If-Match
+          required: true
+          description: "ETag header value from getTask  call"
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateTaskBody"
+      responses:
+        "200":
+          $ref: '#/components/responses/UpdateTaskResponse'
+        "400":
+          description: "Invalid data supplied"
+        "404":
+          description: "Task not found"
+    delete:
+      tags:
+        - "Tasks"
+      summary: "Delete task"
+      description: "Delete existing task"
+      operationId: deleteTask
+      responses:
+        "204":
+          description: "Task successfully deleted"
+        "404":
+          description: "Task not found"
+
+components:
+  responses:
+    ListCustomersResponse:
+      description: Response with list of customers
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListCustomersResponse'
+    CreateCustomerResponse:
+      description: Response with created Customer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Customer'
+    UpdateCustomerResponse:
+      description: Response with updated customer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Customer'
+    GetCustomerResponse:
+      description: Response with existing customer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Customer'
+    ListTasksResponse:
+      description: Response with list of tasks per customer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListTasksResponse'
+    GetTaskResponse:
+      description: Response with existing task
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Task'
+    TasksCreationResponse:
+      description: Response with created tasks for a customer
+      content:
+        application/json:
+          schema:
+            type: "array"
+            items:
+              $ref: '#/components/schemas/Task'
+    UpdateTaskResponse:
+      description: Response with updated task
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Task'
+
+  requestBodies:
+    CreateCustomerBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCustomerRequest'
+    UpdateCustomerBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCustomerRequest'
+    CreateTasksBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTasksRequest'
+    UpdateTaskBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateTaskRequest'
+
+  parameters:
+    CustomerIdPathParam:
+      name: customerId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/CustomerId'
+
+    CustomerIdQueryParam:
+      description: Customer id query parameter
+      name: customerId
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/CustomerId'
+
+    TaskIdPathParam:
+      name: taskId
+      in: path
+      required: true
+      schema:
+        type: "string"
+
+    CustomerFirstNameQueryParam:
+      description: Customer first name query parameter
+      name: firstName
+      in: query
+      required: false
+      schema:
+        type: "string"
+
+    CustomerLastNameQueryParam:
+      description: Customer last name query parameter
+      name: lastName
+      in: query
+      required: false
+      schema:
+        type: "string"
+
+    CustomerIdsQueryParam:
+      description: Customers ids query parameter, can be comma-separated list to include multiple values
+      name: customerIds
+      in: query
+      required: false
+      schema:
+        type: array
+        maxItems: 40
+        items:
+          $ref: "#/components/schemas/CustomerId"
+
+    CustomerSearchQueryParam:
+      name: search
+      in: query
+      description: |
+        Provides full text search on Customers.
+
+        Searches in following parameters:
+          * id
+          * first name
+      schema:
+        type: string
+      required: false
+
+    CustomerCityQueryParam:
+      description: Customer city query parameter
+      name: city
+      in: query
+      required: false
+      schema:
+        type: "string"
+
+    CompanyNameQueryParam:
+      description: Company name query parameter
+      name: company
+      in: query
+      required: false
+      schema:
+        type: "string"
+
+    ProductNumberQueryParam:
+      description: Product number query parameter
+      name: product
+      in: query
+      required: false
+      schema:
+        type: "string"
+
+    PageNumberQueryParam:
+      description: Page number, default is 0
+      name: pageNumber
+      in: query
+      schema:
+        type: integer
+        default: 0
+        minimum: 0
+      required: false
+
+    PageSizeQueryParam:
+      description: Number of items in a page, default page size is 20, maximum 50
+      name: pageSize
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+        default: 20
+      required: false
+
+    SortQueryParam:
+      description: |
+        Sort criteria, format: '?sort=&lt;propertyA&gt;[,&lt;propertyB&gt;][,(asc|desc)]',
+        sort parameter can be used several times in one query
+      name: sort
+      in: query
+      schema:
+        type: string
+      required: false
+
+  schemas:
+    ListCustomersResponse:
+      description: List of customers with paging support
+      properties:
+        results:
+          $ref: '#/components/schemas/CustomersResults'
+        paging:
+          $ref: '#/components/schemas/Paging'
+      required:
+        - results
+        - paging
+
+    ListTasksResponse:
+      description: List of tasks with paging support
+      properties:
+        results:
+          $ref: '#/components/schemas/TasksResults'
+        paging:
+          $ref: '#/components/schemas/Paging'
+      required:
+        - results
+        - paging
+
+    CustomersResults:
+      type: array
+      items:
+        $ref: '#/components/schemas/Customer'
+
+    TasksResults:
+      type: array
+      items:
+        $ref: '#/components/schemas/Task'
+
+    CreateCustomerRequest:
+      type: object
+      description: Request to create customer
+      allOf:
+        - $ref: "#/components/schemas/CustomerDetails"
+
+    UpdateCustomerRequest:
+      type: object
+      description: Request to update customer
+      allOf:
+        - $ref: "#/components/schemas/CustomerDetails"
+
+    CreateTasksRequest:
+      type: object
+      description: Request to create taks for a customer
+      properties:
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskDetails'
+      required:
+        - tasks
+
+    UpdateTaskRequest:
+      type: object
+      description: Request to create taks for a customer
+      properties:
+        productNumber:
+          type: "string"
+          description: "Product number of the task"
+      required:
+        - productNumber
+    
+    Customer:
+      allOf:
+        - type: object
+          properties:
+            customerId:
+              $ref: '#/components/schemas/CustomerId'
+        - $ref: '#/components/schemas/CustomerDetails'
+        - $ref: '#/components/schemas/Audit'
+          title: Customer
+
+    CustomerDetails:
+      type: object
+      properties:
+        firstName:
+          type: "string"
+          description: "Customer first name"
+        lastName:
+          type: "string"
+          description: "Customer last name"
+        street:
+          type: "string"
+          description: "Customer address Street name"
+        streetAdditional:
+          type: "string"
+          description: "Customer address Street additional information like house number"
+        city:
+          type: "string"
+          description: "Customer address  city (Ort)"
+        land:
+          type: "string"
+          description: "Customer address  country"
+        postal:
+          type: "string"
+          description: "Customer address postal (zip) code"
+        email:
+          type: "string"
+          format: "email"
+          description: "Customer email"
+        companyName:
+          type: "string"
+          description: "Customer company"
+
+    Task:
+      allOf:
+        - type: object
+          properties:
+            customerId:
+              $ref: '#/components/schemas/CustomerId'
+          title: Task
+        - $ref: '#/components/schemas/TaskDetails'
+        - $ref: '#/components/schemas/Audit'
+
+    TaskDetails:
+      type: object
+      properties:
+        taskId:
+          type: "string"
+          description: "Task id"
+        productNumber:
+          type: "string"
+          description: "Product number of the assigned task"
+
+    CustomerId:
+      type: integer
+      format: int64
+
+    Paging:
+      type: "object"
+      description: "Paging information"
+      required:
+        - "pageNumber"
+        - "pageSize"
+        - "pageCount"
+        - "totalElements"
+      properties:
+        pageNumber:
+          type: "integer"
+          format: "int32"
+          description: "Page number, first page is 0"
+        pageSize:
+          type: "integer"
+          format: "int32"
+          description: "Number of customers in the page"
+        pageCount:
+          type: "integer"
+          format: "int32"
+          description: "Total number of pages"
+        totalElements:
+          type: "integer"
+          format: "int64"
+          description: "Total number of elements"
+      example:
+        pageNumber: 0
+        pageSize: 20
+        pageCount: 5
+
+    Audit:
+      type: object
+      properties:
+        created:
+          description: Date of creation
+          type: string
+          format: date-time
+        lastChange:
+          description: Date of last modification
+          type: string
+          format: date-time
+        createdBy:
+          type: "string"
+          description: "Created by"
+        lastChangeBy:
+          type: "string"
+          description: "Last modified by"
+
+    ### ERROR RESPONSE ###
+    ApiErrorResponse:
+      description: Representation of an error which occurred on the server
+      type: object
+      properties:
+        traceId:
+          description: Trace identifier to easily find error on the server
+          type: "string"
+        timestamp:
+          description: Incident date time
+          type: string
+          format: 'date-time'
+          example: '2023-09-01T09:00:43Z'
+        status:
+          description: HTTP response code
+          type: "integer"
+          example: 404
+        message:
+          description: Basic description of problem
+          type: "string"
+          example: Some fields are not valid
+        details:
+          type: array
+          items:
+            description: Detail information about error
+            type: string
+        path:
+          type: "string"
+          description: "Request path"
+          example: "/request"
+        error:
+          type: "string"
+          example: FORBIDDEN
+        code:
+          type: "string"
+          description: |
+            * `CUSTOMERS_ERR_1401_CUSTOMER_NOT_FOUND` - Customer with the given customer id ({}) is not found.
+            * `CUSTOMERS_ERR_1402_CUSTOMER_EMAIL_ALREADY_EXISTS` - Customer with this email or username ({}) already exists.
+            * `CUSTOMERS_ERR_1403_TASK_NOT_FOUND` - Task with the given task id ({}) is not found.
+
+tags:
+  - name: "Customers"
+    description: ""
+  - name: "Tasks"
+    description: ""
