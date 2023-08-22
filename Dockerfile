@@ -22,7 +22,7 @@ FROM openjdk:17-jdk-slim-buster
 
 # Add non-root user
 RUN addgroup --system spring && adduser --system spring --ingroup spring
-#USER spring:spring
+USER spring:spring
 
 # Add actual application
 COPY --from=builder /customer-api/customers-app/target/customers-app-0.0.1-SNAPSHOT.jar /app/service.jar
