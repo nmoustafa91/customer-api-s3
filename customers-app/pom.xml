@@ -127,6 +127,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.customers.CustomersApplication</mainClass>
+					<layout>JAR</layout>
+					<skip>false</skip>
+				</configuration>
 			</plugin>
 
 			<plugin>

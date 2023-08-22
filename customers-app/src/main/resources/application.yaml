@@ -22,7 +22,6 @@ logging:
       customers: DEBUG
     root: INFO
 server:
-  port: 8081
   shutdown: graceful
 spring:
   application:
