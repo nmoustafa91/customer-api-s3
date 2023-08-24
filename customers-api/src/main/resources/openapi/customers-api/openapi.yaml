@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: "Customers API offers CRUD operations on managing customers with their assigned tasks."
+  description: "Customers API offers CRUD operations on managing customers with their assigned contracts."
   version: "0.2.0"
   title: "Customers API"
 
@@ -106,97 +106,97 @@ paths:
         "404":
           description: "Customer not found"
 
-  /customers/{customerId}/tasks:
+  /customers/{customerId}/contracts:
     parameters:
       - $ref: "#/components/parameters/CustomerIdPathParam"
     get:
       tags:
-        - "Tasks"
-      summary: "Get tasks list by customer"
-      description: "Get tasks list by customer"
-      operationId: getTasks
+        - "Contracts"
+      summary: "Get contracts list by customer"
+      description: "Get contracts list by customer"
+      operationId: getContracts
       parameters:
         - $ref: '#/components/parameters/PageNumberQueryParam'
         - $ref: '#/components/parameters/PageSizeQueryParam'
         - $ref: '#/components/parameters/SortQueryParam'
       responses:
         "200":
-          $ref: '#/components/responses/ListTasksResponse'
+          $ref: '#/components/responses/ListContractsResponse'
         "404":
           description: "Customer not found"
     post:
       tags:
-        - "Tasks"
-      summary: "Create tasks for a customer"
-      description: "Create tasks for a customer"
-      operationId: createTasks
+        - "Contracts"
+      summary: "Create contracts for a customer"
+      description: "Create contracts for a customer"
+      operationId: createContracts
       requestBody:
-        $ref: "#/components/requestBodies/CreateTasksBody"
+        $ref: "#/components/requestBodies/CreateContractsBody"
       responses:
         "201":
-          $ref: '#/components/responses/TasksCreationResponse'
+          $ref: '#/components/responses/ContractsCreationResponse'
         "400":
           description: "Invalid data supplied"
         "404":
           description: "Customer not found"
     delete:
       tags:
-        - "Tasks"
-      summary: "Delete customer tasks"
-      description: "Delete existing customer tasks"
-      operationId: deleteTasks
+        - "Contracts"
+      summary: "Delete customer contracts"
+      description: "Delete existing customer contracts"
+      operationId: deleteContracts
       responses:
         "204":
-          description: "Tasks successfully deleted"
+          description: "Contracts successfully deleted"
         "404":
           description: "Customer not found"
-  /tasks/{taskId}:
+  /contracts/{contractId}:
     parameters:
-      - $ref: "#/components/parameters/TaskIdPathParam"
+      - $ref: "#/components/parameters/ContractIdPathParam"
     get:
       tags:
-        - "Tasks"
-      summary: "Get a task"
-      description: "Get existing task"
-      operationId: getTask
+        - "Contracts"
+      summary: "Get a contract"
+      description: "Get existing contract"
+      operationId: getContract
       responses:
         "200":
-          $ref: '#/components/responses/GetTaskResponse'
+          $ref: '#/components/responses/GetContractResponse'
         "404":
-          description: "task not found"
+          description: "contract not found"
     put:
       tags:
-        - "Tasks"
-      summary: "Update a task"
-      description: "Update existing task"
-      operationId: updateTask
+        - "Contracts"
+      summary: "Update a contract"
+      description: "Update existing contract"
+      operationId: updateContract
       parameters:
         - in: header
           name: If-Match
           required: true
-          description: "ETag header value from getTask  call"
+          description: "ETag header value from getContract  call"
           schema:
             type: string
       requestBody:
-        $ref: "#/components/requestBodies/UpdateTaskBody"
+        $ref: "#/components/requestBodies/UpdateContractBody"
       responses:
         "200":
-          $ref: '#/components/responses/UpdateTaskResponse'
+          $ref: '#/components/responses/UpdateContractResponse'
         "400":
           description: "Invalid data supplied"
         "404":
-          description: "Task not found"
+          description: "Contract not found"
     delete:
       tags:
-        - "Tasks"
-      summary: "Delete task"
-      description: "Delete existing task"
-      operationId: deleteTask
+        - "Contracts"
+      summary: "Delete contract"
+      description: "Delete existing contract"
+      operationId: deleteContract
       responses:
         "204":
-          description: "Task successfully deleted"
+          description: "Contract successfully deleted"
         "404":
-          description: "Task not found"
+          description: "Contract not found"
 
 components:
   responses:
@@ -224,32 +224,32 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Customer'
-    ListTasksResponse:
-      description: Response with list of tasks per customer
+    ListContractsResponse:
+      description: Response with list of contracts per customer
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ListTasksResponse'
-    GetTaskResponse:
-      description: Response with existing task
+            $ref: '#/components/schemas/ListContractsResponse'
+    GetContractResponse:
+      description: Response with existing contract
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Task'
-    TasksCreationResponse:
-      description: Response with created tasks for a customer
+            $ref: '#/components/schemas/Contract'
+    ContractsCreationResponse:
+      description: Response with created contracts for a customer
       content:
         application/json:
           schema:
             type: "array"
             items:
-              $ref: '#/components/schemas/Task'
-    UpdateTaskResponse:
-      description: Response with updated task
+              $ref: '#/components/schemas/Contract'
+    UpdateContractResponse:
+      description: Response with updated contract
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Task'
+            $ref: '#/components/schemas/Contract'
 
   requestBodies:
     CreateCustomerBody:
@@ -262,16 +262,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UpdateCustomerRequest'
-    CreateTasksBody:
+    CreateContractsBody:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateTasksRequest'
-    UpdateTaskBody:
+            $ref: '#/components/schemas/CreateContractsRequest'
+    UpdateContractBody:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/UpdateTaskRequest'
+            $ref: '#/components/schemas/UpdateContractRequest'
 
   parameters:
     CustomerIdPathParam:
@@ -289,8 +289,8 @@ components:
       schema:
         $ref: '#/components/schemas/CustomerId'
 
-    TaskIdPathParam:
-      name: taskId
+    ContractIdPathParam:
+      name: contractId
       in: path
       required: true
       schema:
@@ -403,11 +403,11 @@ components:
         - results
         - paging
 
-    ListTasksResponse:
-      description: List of tasks with paging support
+    ListContractsResponse:
+      description: List of contracts with paging support
       properties:
         results:
-          $ref: '#/components/schemas/TasksResults'
+          $ref: '#/components/schemas/ContractsResults'
         paging:
           $ref: '#/components/schemas/Paging'
       required:
@@ -419,10 +419,10 @@ components:
       items:
         $ref: '#/components/schemas/Customer'
 
-    TasksResults:
+    ContractsResults:
       type: array
       items:
-        $ref: '#/components/schemas/Task'
+        $ref: '#/components/schemas/Contract'
 
     CreateCustomerRequest:
       type: object
@@ -436,24 +436,24 @@ components:
       allOf:
         - $ref: "#/components/schemas/CustomerDetails"
 
-    CreateTasksRequest:
+    CreateContractsRequest:
       type: object
       description: Request to create taks for a customer
       properties:
-        tasks:
+        contracts:
           type: array
           items:
-            $ref: '#/components/schemas/TaskDetails'
+            $ref: '#/components/schemas/ContractDetails'
       required:
-        - tasks
+        - contracts
 
-    UpdateTaskRequest:
+    UpdateContractRequest:
       type: object
       description: Request to create taks for a customer
       properties:
         productNumber:
           type: "string"
-          description: "Product number of the task"
+          description: "Product number of the contract"
       required:
         - productNumber
     
@@ -499,25 +499,25 @@ components:
           type: "string"
           description: "Customer company"
 
-    Task:
+    Contract:
       allOf:
         - type: object
           properties:
             customerId:
               $ref: '#/components/schemas/CustomerId'
-          title: Task
-        - $ref: '#/components/schemas/TaskDetails'
+          title: Contract
+        - $ref: '#/components/schemas/ContractDetails'
         - $ref: '#/components/schemas/Audit'
 
-    TaskDetails:
+    ContractDetails:
       type: object
       properties:
-        taskId:
+        contractId:
           type: "string"
-          description: "Task id"
+          description: "Contract id"
         productNumber:
           type: "string"
-          description: "Product number of the assigned task"
+          description: "Product number of the assigned contract"
 
     CustomerId:
       type: integer
@@ -609,10 +609,10 @@ components:
           description: |
             * `CUSTOMERS_ERR_1401_CUSTOMER_NOT_FOUND` - Customer with the given customer id ({}) is not found.
             * `CUSTOMERS_ERR_1402_CUSTOMER_EMAIL_ALREADY_EXISTS` - Customer with this email or username ({}) already exists.
-            * `CUSTOMERS_ERR_1403_TASK_NOT_FOUND` - Task with the given task id ({}) is not found.
+            * `CUSTOMERS_ERR_1403_CONTRACT_NOT_FOUND` - Contract with the given contract id ({}) is not found.
 
 tags:
   - name: "Customers"
     description: ""
-  - name: "Tasks"
+  - name: "Contracts"
     description: ""

@@ -1,7 +1,6 @@
 package com.customers.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.aws.context.config.annotation.EnableContextInstanceData;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,7 +11,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 @Configuration
-@EnableContextInstanceData
 public class S3Config {
         @Value("${cloud.aws.region.static}")
         private String region;

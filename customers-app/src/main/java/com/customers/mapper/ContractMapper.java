@@ -8,31 +8,31 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
 
-import com.customers.db.model.Task;
+import com.customers.db.model.Contract;
 import com.customers.db.model.VersionModel;
-import com.customers.model.ListTasksResponseDTO;
+import com.customers.model.ListContractsResponseDTO;
 import com.customers.model.PagingDTO;
-import com.customers.model.TaskDTO;
-import com.customers.model.TaskDetailsDTO;
-import com.customers.model.UpdateTaskRequestDTO;
+import com.customers.model.ContractDTO;
+import com.customers.model.ContractDetailsDTO;
+import com.customers.model.UpdateContractRequestDTO;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
-public interface TaskMapper {
+public interface ContractMapper {
 
   @Mapping(target = "customerId", source = "customer.customerId")
-  TaskDTO fromEntity(Task task);
+  ContractDTO fromEntity(Contract contract);
 
-  Task toTaskEntity(TaskDetailsDTO taskDTO);
+  Contract toContractEntity(ContractDetailsDTO contractDTO);
 
-  Task updateEntityFromModel(UpdateTaskRequestDTO updateTaskRequestDTO, @MappingTarget Task task);
+  Contract updateEntityFromModel(UpdateContractRequestDTO updateContractRequestDTO, @MappingTarget Contract contract);
 
-  default VersionModel<TaskDTO> entityToVersionModel(Task entity) {
+  default VersionModel<ContractDTO> entityToVersionModel(Contract entity) {
     return new VersionModel<>(entity.getVersion(),
         fromEntity(entity));
   }
 
-  default ListTasksResponseDTO pageToTasksResponseDTO(Page<Task> page) {
-    return new ListTasksResponseDTO()
+  default ListContractsResponseDTO pageToContractsResponseDTO(Page<Contract> page) {
+    return new ListContractsResponseDTO()
         .results(page.get().map(this::fromEntity).collect(Collectors.toList()))
         .paging(createPagingResponseFromPage(page));
   }

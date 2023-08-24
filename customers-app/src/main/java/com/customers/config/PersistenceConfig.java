@@ -23,7 +23,7 @@ public class PersistenceConfig {
 	}
 
 	/**
-	 * May not be very useful here in that case, but I need it when I use Postgresql DB.
+	 * It is needed specially with Postgresql DB.
 	 *
 	 * @return
 	 */

@@ -17,7 +17,7 @@ derby.log
 
 # Gradle artifacts
 .gradle
-.gradletasknamecache
+.gradlecontractnamecache
 /build
 buildSrc/build
 /spring-*/build
@@ -52,3 +52,5 @@ atlassian-ide-plugin.xml
 .vscode/
 
 cached-antora-playbook.yml
+customers-api/target/
+customers-app/target/

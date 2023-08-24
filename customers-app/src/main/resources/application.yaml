@@ -11,8 +11,9 @@ customers:
   s3-storage:
     batch-size: 100
     hourly-delta-frequency: 2
+    customers-bucket: customers_bucket
     cron:
-      upload: "0 0 */2 * * ?"
+      upload: "0 0/15 * * * ?"
   time-zone: Europe/Berlin
 info:
   name: customers API

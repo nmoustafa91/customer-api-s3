@@ -36,9 +36,10 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class IonosS3ServiceImpl implements IonosS3Service {
 
-
   private static final List<String> DETAIL_HEADERS = List.of("Firma", "Strasse", "Strassenzusatz", "Ort", "Land", "PLZ",
       "Vorname", "Nachname", "Kunden-ID");
+  public static final String COUNTRY = "Germany_";
+  public static final String FILE_EXTENSION = ".csv";
 
   private final CustomerRepository customerRepository;
   private final S3Repository s3Repository;
@@ -46,17 +47,21 @@ public class IonosS3ServiceImpl implements IonosS3Service {
 
   @Override
   @Scheduled(cron = "${customers.s3-storage.cron.upload}")
-  public void uploadCustomerDataToS3Storage() {
-    OffsetDateTime deltaDate = OffsetDateTime.now().minusMonths(uploadingProperties.getHourlyDeltaFrequency());
-    log.debug("Start CRON cleaner [deleteOldImports] with date [{}].", deltaDate);
+  public void uploadDeltaCustomersDataToS3Storage() {
+    OffsetDateTime deltaDate = OffsetDateTime.now().minusHours(uploadingProperties.getHourlyDeltaFrequency());
+    log.info("#########################################################");
+    log.debug("Start CRON uploader to s3 [deltaCustomers] with date [{}].", deltaDate);
+    log.info("#########################################################");
 
     Slice<Customer> deltaCustomers;
     do {
 
       deltaCustomers = customerRepository.getDeltaCustomers(deltaDate,
           PageRequest.of(0, uploadingProperties.getBatchSize()));
-      File file = writeCustomersSlice(deltaCustomers);
-      s3Repository.uploadFileToS3Bucket("customers_bucket", file);
+      if (deltaCustomers.hasContent()) {
+        File customersSlice = writeCustomersSlice(deltaCustomers);
+        s3Repository.uploadFileToS3Bucket(uploadingProperties.getCustomersBucket(), customersSlice);
+      }
 
     } while (deltaCustomers.hasNext());
   }
@@ -73,7 +78,7 @@ public class IonosS3ServiceImpl implements IonosS3Service {
 
       writer.flush();
 
-      File file = Files.createTempFile("Germany_" + LocalDate.now(), ".csv").toFile();
+      File file = Files.createTempFile(COUNTRY + LocalDate.now(), FILE_EXTENSION).toFile();
       OutputStream outputStream = new FileOutputStream(file);
       byteArrayOutputStream.writeTo(outputStream);
       return file;

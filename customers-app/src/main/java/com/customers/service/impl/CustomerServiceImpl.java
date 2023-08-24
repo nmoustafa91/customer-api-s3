@@ -33,9 +33,6 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
-  public static final List<String> DETAIL_HEADERS = List.of("Firma", "Strasse", "Strassenzusatz", "Ort", "Land", "PLZ",
-      "Vorname", "Nachname", "Kunden-ID");
-
   private final CustomerRepository customerRepository;
   private final CustomerMapper customerMapper;
 
@@ -61,9 +58,9 @@ public class CustomerServiceImpl implements CustomerService {
 
   @Override
   public CustomerDTO createCustomer(CreateCustomerRequestDTO createCustomerRequestDTO) {
-    Customer customer = customerMapper.fromCreateBodyToEntity(createCustomerRequestDTO);
-
     validateCustomerCreate(createCustomerRequestDTO);
+
+    Customer customer = customerMapper.fromCreateBodyToEntity(createCustomerRequestDTO);
 
     return customerMapper.fromEntity(customerRepository.save(customer));
   }

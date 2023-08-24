@@ -8,10 +8,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.customers.db.model.Task;
+import com.customers.db.model.Contract;
 import com.customers.db.model.Customer;
 import com.customers.db.model.Customer_;
-import com.customers.db.model.Task_;
+import com.customers.db.model.Contract_;
 import com.customers.domain.CustomerFilter;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -27,16 +27,16 @@ public class CustomerSpecificationHelper {
 		return (root, query, cb) -> {
 			final List<Predicate> predicates = new LinkedList<>();
 
-			// last name
-			if (StringUtils.hasText(customerFilter.getLastName())) {
-				predicates.add(cb.like(cb.lower(root.get(Customer_.LAST_NAME)),
-						"%" + customerFilter.getLastName().toLowerCase(Locale.ROOT) + "%"));
-			}
-
 			// first name
 			if (StringUtils.hasText(customerFilter.getFirstName())) {
 				predicates.add(cb.like(cb.lower(root.get(Customer_.FIRST_NAME)),
 						"%" + customerFilter.getFirstName().toLowerCase(Locale.ROOT) + "%"));
+			}
+
+			// last name
+			if (StringUtils.hasText(customerFilter.getLastName())) {
+				predicates.add(cb.like(cb.lower(root.get(Customer_.LAST_NAME)),
+						"%" + customerFilter.getLastName().toLowerCase(Locale.ROOT) + "%"));
 			}
 
 			// city
@@ -53,8 +53,8 @@ public class CustomerSpecificationHelper {
 
 			// product
 			if (StringUtils.hasText(customerFilter.getProductNumber())) {
-				Join<Customer, Task> taskJoin = root.join(Customer_.TASKS);
-				predicates.add(cb.equal(taskJoin.get(Task_.PRODUCT_NUMBER), customerFilter.getProductNumber()));
+				Join<Customer, Contract> contractJoin = root.join(Customer_.CONTRACTS);
+				predicates.add(cb.equal(contractJoin.get(Contract_.PRODUCT_NUMBER), customerFilter.getProductNumber()));
 			}
 
 			// ids

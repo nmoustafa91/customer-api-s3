@@ -17,7 +17,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
- * Entity represents the customer task object in DB.
+ * Entity represents the customer contract object in DB.
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -26,12 +26,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @Entity
 @Table(name = "auftraege")
-public class Task
+public class Contract
     extends UserAwareEntity implements Serializable {
 
   @Id
   @Column(name = "auftragid")
-  private String taskId;
+  private String contractId;
 
   @Column(name = "artikelnummer", nullable = false)
   private String productNumber;

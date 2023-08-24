@@ -11,8 +11,9 @@ import lombok.Data;
 public class UploadingProperties {
 
   private int hourlyDeltaFrequency;
-  /// batch size
+  // size of the batch to be uploaded to S3 per time
   private int batchSize = 100;
+  private String customersBucket;
 
 }
 

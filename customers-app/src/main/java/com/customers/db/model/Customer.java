@@ -71,6 +71,6 @@ public class Customer
   @EqualsAndHashCode.Exclude
   @Builder.Default
   @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-  private Set<Task> tasks = new HashSet<>();
+  private Set<Contract> contracts = new HashSet<>();
 
 }
